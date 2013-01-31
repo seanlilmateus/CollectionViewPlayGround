@@ -24,6 +24,7 @@ class MainViewController < UICollectionViewController
     super.tap { setup }
   end
   
+  
   def viewDidLoad
     super
     self.collectionView.collectionViewLayout = GridLayout.alloc.init
@@ -160,7 +161,23 @@ class MainViewController < UICollectionViewController
   
   
   def handlePinch(gesture)
-    return nil unless @layout_style == LAYOUT_STACKS
+    if @layout_style == LAYOUT_STACKS
+      pinch_on_stacks(gesture)
+    elsif @layout_style == LAYOUT_GRID
+      pinch_on_grid(gesture)
+    end
+  end
+  
+  def pinch_on_grid(gesture)
+    if (gesture.velocity < 0)
+        puts :close_pinch
+    elsif (gesture.velocity > 0)
+      puts :open_pinch
+    end
+  end
+  
+  
+  def pinch_on_stacks(gesture)
     stacks_layout = self.collectionView.collectionViewLayout
     
     if gesture.state == UIGestureRecognizerStateBegan

@@ -16,13 +16,16 @@ class SpiralLayout < UICollectionViewLayout
     @content_size = CGSize.new(@page_size.width * @page_count, @page_size.height)
   end
   
+  
   def collectionViewContentSize
     @content_size
   end
   
+  
   def self.layoutAttributesClass
     ConferenceLayoutAttributes
   end
+  
   
   def shouldInvalidateLayoutForBoundsChange(new_bounds)
     !CGSizeEqualToSize(@page_size, new_bounds.size)
@@ -40,12 +43,14 @@ class SpiralLayout < UICollectionViewLayout
       point = CGPoint.new(CGRectGetMidX(page_rect) + (@radius * path.item / denominator) * Math.cos(3 * path.item * Math::PI / denominator), 
                          CGRectGetMidY(page_rect) + (@radius * path.item / denominator) * Math.sin(3 * path.item * Math::PI / denominator))
       attrs.center = point
+      attrs.zIndex = path.row
       ipad = UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad
       scale_factor = ipad ? 1 : 0.5
       scale = (0.25 + 0.75 * path.item / denominator) * scale_factor
       attrs.transform3D = CATransform3DMakeScale(scale, scale, 1)
     end
   end
+  
   
   def layoutAttributesForSupplementaryViewOfKind(kind, atIndexPath:path)
     ConferenceLayoutAttributes.layoutAttributesForSupplementaryViewOfKind(kind, withIndexPath:path).tap do |attrs|
@@ -56,9 +61,11 @@ class SpiralLayout < UICollectionViewLayout
     end
   end
   
+  
   def cellCountForSection(section)
     @cell_counts[section].intValue
   end
+  
   
   def layoutAttributesForElementsInRect(rect)
     attrs = []
@@ -91,10 +98,12 @@ class SpiralLayout < UICollectionViewLayout
                                       .map    { |update| update.indexPathAfterUpdate }
   end
   
+  
   def finalizeCollectionViewUpdates
     @delete_index_paths = nil
     @insert_index_paths = nil
   end
+  
   
   def initialLayoutAttributesForAppearingItemAtIndexPath(path)
     attributes = super
@@ -109,6 +118,7 @@ class SpiralLayout < UICollectionViewLayout
     end
     attributes
   end
+  
   
   def finalLayoutAttributesForDisappearingItemAtIndexPath(path)
     attributes = super
