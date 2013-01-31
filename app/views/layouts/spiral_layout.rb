@@ -112,6 +112,7 @@ class SpiralLayout < UICollectionViewLayout
       attributes ||= self.layoutAttributesForItemAtIndexPath(path)
       
       attributes.alpha  = 0.0
+      attributes.zIndex = path.row
       page_rect    = @page_rects[path.section].CGRectValue
       attributes.center = CGPoint.new(CGRectGetMidX(page_rect), CGRectGetMidY(page_rect))
       attributes.transform3D = CATransform3DMakeScale(0.25, 0.25, 1)

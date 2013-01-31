@@ -37,31 +37,38 @@ class StacksLayout < UICollectionViewLayout
     !CGSizeEqualToSize(old_bounds.size, @page_size)
   end
   
+  
   def self.layoutAttributesClass
     ConferenceLayoutAttributes
   end
+  
   
   def pinchedStackIndex
     @pinched_stack_index
   end
   
+  
   def pinchedStackScale
     @pinched_stack_scale
   end
+  
   
   def pinchedStackCenter
     @pinched_stack_center
   end
   
+  
   def collectionViewContentSize
     @content_size
   end
+  
   
   def prepareLayout
     super
     prepareStacksLayout # calculate everything!
     prepareItemsLayout if self.pinching?
   end
+  
   
   def layoutAttributesForItemAtIndexPath(path)
     ConferenceLayoutAttributes.layoutAttributesForCellWithIndexPath(path).tap do |attrs|
@@ -125,6 +132,7 @@ class StacksLayout < UICollectionViewLayout
     end
   end
   
+  
   def layoutAttributesForElementsInRect(rect)
     [].tap do |attrs|
       @stack_frames.each_with_index do |stack, idx|
@@ -139,16 +147,19 @@ class StacksLayout < UICollectionViewLayout
     end
   end
   
+  
   # Properties
   def pinchedStackScale=(new_scale)
     @pinched_stack_scale = new_scale
     self.invalidateLayout
   end
+     
       
   def pinchedStackCenter=(new_center)
     @pinched_stack_center = new_center
     self.invalidateLayout
   end
+  
   
   def pinchedStackIndex=(new_index)  
     @pinched_stack_index = new_index
@@ -196,6 +207,7 @@ class StacksLayout < UICollectionViewLayout
     @content_size = CGSize.new(@page_size.width, height)
   end
   
+  
   def prepareItemsLayout
     @item_frames = []
     number_of_items = self.collectionView.numberOfItemsInSection(@pinched_stack_index)
@@ -231,6 +243,7 @@ class StacksLayout < UICollectionViewLayout
     stack_content_size = @content_size
     @content_size = CGSize.new([item_content_size.width, stack_content_size.width].max, [item_content_size.height, stack_content_size.height].max)
   end
+  
   
   def calc_progress
     if @pinched_stack_scale
