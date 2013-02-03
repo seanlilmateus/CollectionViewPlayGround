@@ -2,7 +2,7 @@ class CoverFlowLayout < UICollectionViewFlowLayout
   ACTIVE_DISTANCE = 100
   TRANSLATE_DISTANCE = 100
   ZOOM_FACTOR = 0.3
-  FLOW_OFFSET = 40
+  FLOW_OFFSET = 5 #40
   
   def init
     super.tap do

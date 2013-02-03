@@ -3,6 +3,7 @@ class GridLayout < UICollectionViewFlowLayout
     ConferenceLayoutAttributes
   end
   
+  
   def init
     super.tap do
       self.scrollDirection = UICollectionViewScrollDirectionVertical
@@ -17,6 +18,7 @@ class GridLayout < UICollectionViewFlowLayout
       @shelf_rects = {}
     end
   end
+    
     
   # Return attributes of all items (cells, supplementary views, decoration views) that appear within this rect
   def layoutAttributesForElementsInRect(rect)
@@ -45,6 +47,7 @@ class GridLayout < UICollectionViewFlowLayout
               
     NSArray.arrayWithArray(new_array)
   end
+
 
   def prepareLayout
     super
@@ -87,9 +90,11 @@ class GridLayout < UICollectionViewFlowLayout
     @shelf_rects = dictionary
   end
   
+  
   def layoutAttributesForItemAtIndexPath(path)
     super.tap { |attrs| attrs.zIndex = 1 }
   end
+  
   
   def layoutAttributesForSupplementaryViewOfKind(kind, atIndexPath:path)
     return nil if kind == SmallConferenceHeader.kind
@@ -103,6 +108,7 @@ class GridLayout < UICollectionViewFlowLayout
     attrs.headerTextAlignment = NSTextAlignmentLeft if attrs.is_a?(ConferenceLayoutAttributes)
     attrs
   end
+  
   
   # layout attributes for a specific decoration view
   def layoutAttributesForDecorationViewOfKind(decorationViewKind, atIndexPath:indexPath)

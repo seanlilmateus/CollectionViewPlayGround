@@ -45,8 +45,8 @@ class CocoaConf
   end
   
   def restoreSpeakerInSection(section)
-    return false if path.section < 0 || path.section >= @conferences.count
-    conference = @conferences[path.section]
+    return if section < 0 || section >= @conferences.count
+    conference = @conferences[section]
     conference.restoreSpeaker
   end
   

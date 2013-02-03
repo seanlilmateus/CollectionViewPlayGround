@@ -14,13 +14,16 @@ class LineLayout < UICollectionViewFlowLayout
     end
   end
   
+  
   def shouldInvalidateLayoutForBoundsChange(old_bounds)
     true
   end
   
+  
   def self.layoutAttributesClass
     ConferenceLayoutAttributes
   end
+  
   
   def layoutAttributesForElementsInRect(rect)
     visible_rect = CGRect.new(self.collectionView.contentOffset, self.collectionView.bounds.size)
@@ -34,20 +37,24 @@ class LineLayout < UICollectionViewFlowLayout
     NSArray.arrayWithArray(array)
   end
   
+  
   def layoutAttributesForItemAtIndexPath(path)
     visible_rect = CGRect.new(self.collectionView.contentOffset, self.collectionView.bounds.size)    
     super.tap { |attrs| self.setLineAttributes(attrs, visibleRect:visible_rect) }
   end
   
+  
   def layoutAttributesForSupplementaryViewOfKind(kind, atIndexPath:path)
     super.tap { |attrs| self.setHeaderAttributes(attrs) if attrs  }
   end
+  
   
   def setHeaderAttributes(attrs)
     attrs.transform3D = CATransform3DMakeRotation(-90 * Math::PI / 180, 0, 0, 1)
     attrs.size = CGSizeMake(attrs.size.height, attrs.size.width)
     attrs.headerTextAlignment = NSTextAlignmentCenter if attrs.is_a?(ConferenceLayoutAttributes)
   end
+  
   
   def setLineAttributes(attrs, visibleRect:visible_rect)
     distance = CGRectGetMidX(visible_rect) - attrs.center.x
@@ -61,6 +68,7 @@ class LineLayout < UICollectionViewFlowLayout
       attrs.zIndex = 0
     end
   end
+  
   
   def targetContentOffsetForProposedContentOffset(proposedContentOffset, withScrollingVelocity:velocity)
     offset_adjustment = Float::MAX

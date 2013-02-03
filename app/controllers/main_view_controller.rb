@@ -10,6 +10,10 @@ class MainViewController < UICollectionViewController
     super.tap { setup }
   end
   
+  def canBecomeFirstResponder
+    true
+  end
+  
   def initWithCollectionViewLayout(layout)
     super.tap { setup }
   end
@@ -50,6 +54,7 @@ class MainViewController < UICollectionViewController
     
     # setup the collectionView Data Source 
     self.collectionView.dataSource = CocoaConf.all
+    self.collectionView.allowsSelection = true
     
     create_tap_recognizer(1, 'handleTap:') # create UITapGestureRecognizer with one tap
     create_tap_recognizer(2, 'handle2FingerTap:') # create UITapGestureRecognizer with two taps
@@ -61,7 +66,21 @@ class MainViewController < UICollectionViewController
     UISwipeGestureRecognizer.alloc.initWithTarget(self, action:'handleSwipeUp:').tap do |swipeUp|
       swipeUp.direction = UISwipeGestureRecognizerDirectionUp;
       self.collectionView.addGestureRecognizer(swipeUp)
-    end    
+    end
+  end
+  
+  def collectionView(clv, didSelectItemAtIndexPath:indexPath)
+    return unless @layout_style == LAYOUT_COVERFLOW || @layout_style == LAYOUT_LINE
+    clv.scrollToItemAtIndexPath(indexPath, atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally, animated:true)
+    clv.deselectItemAtIndexPath(indexPath, animated:true)
+  end
+  
+  def collectionView(clv, shouldDeselectItemAtIndexPath:indexPath)
+    true
+  end
+  
+  def collectionView(clv, shouldSelectItemAtIndexPath:indexPath)
+    true
   end
   
   
@@ -115,27 +134,36 @@ class MainViewController < UICollectionViewController
   
   # one tap (UITapGestureRecognizer) gesture handler
   def handleTap(gesture)
-    return unless self.layoutSupportsInsert
-    
     point = gesture.locationInView(self.collectionView)
+    
+    unless self.layoutSupportsInsert
+      indexPath = self.collectionView.indexPathForItemAtPoint(point)
+      delegate = self.collectionView.delegate
+      if delegate.respond_to?('collectionView:didSelectItemAtIndexPath:')
+        delegate.collectionView(self.collectionView, didSelectItemAtIndexPath:indexPath)
+      end
+      return
+    end
+    
     number_of_sections = self.collectionView.numberOfSections
 
     number_of_sections.times do |section|
+      
       kind = @layout_style == LAYOUT_STACKS ? SmallConferenceHeader.kind : UICollectionElementKindSectionHeader
       clv_layout = self.collectionView.collectionViewLayout
+      
       indexPath = NSIndexPath.indexPathForItem(0, inSection:section)
       attrs = clv_layout.layoutAttributesForSupplementaryViewOfKind(kind, atIndexPath:indexPath)
-      
+            
       if attrs && CGRectContainsPoint(attrs.frame, point)
         number_of_speakers = self.collectionView.numberOfItemsInSection(section)
         cocoa_conf = self.collectionView.dataSource
-        
         if (cocoa_conf.restoreSpeakerInSection(section))
           if number_of_speakers.zero?
             self.collectionView.reloadData
           else
             indexPath = NSIndexPath.indexPathForItem(number_of_speakers, inSection:section)
-            self.collectionView.insertItemsAtIndexPaths(indexPath)
+            self.collectionView.insertItemsAtIndexPaths([indexPath])
           end
         end
         break

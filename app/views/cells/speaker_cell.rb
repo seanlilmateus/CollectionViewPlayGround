@@ -6,8 +6,10 @@ class SpeakerCell < UICollectionViewCell
       cell.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin
       @speaker_image =  UIImageView.alloc.initWithFrame([[4, 4], [self.frame.size.width, 162]]).tap do |imgv|
         #imgv.translatesAutoresizingMaskIntoConstraints = false
+        imgv.contentMode = UIViewContentModeScaleAspectFit
         imgv.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin
         imgv.backgroundColor = UIColor.clearColor
+        imgv.userInteractionEnabled = true
         cell.contentView.addSubview(imgv)
       end
       
@@ -48,8 +50,8 @@ class SpeakerCell < UICollectionViewCell
       @speaker_image.layer.shadowPath    = UIBezierPath.bezierPathWithRect(CGRectInset(@speaker_image.bounds, 1, 1)).CGPath
     end
   end
-  # cell.name_label.alpha = clv.collectionViewLayout.is_a?(StacksLayout) ? 0.0 : 1.0
-  # 
+
+
   def applyLayoutAttributes(conference_attrs)
     if conference_attrs.is_a?(ConferenceLayoutAttributes)
       @speaker_image.layer.shadowOpacity = conference_attrs.shadowOpacity
