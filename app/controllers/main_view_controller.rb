@@ -19,7 +19,7 @@ class MainViewController < UICollectionViewController
   end
   
   # starting from xib/Storyboards
-  def initWithNibName(name, budnle:bundle)
+  def initWithNibName(name, bundle:bundle)
     super.tap { setup }
   end
   
